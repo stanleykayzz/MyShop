@@ -9,7 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyShop.Command\MyShop.Command.csproj" />
+    <ProjectReference Include="..\MyShop.Core\MyShop.Core.csproj" />
+    <ProjectReference Include="..\MyShop.Infrastructure\MyShop.Infrastructure.csproj" />
+    <ProjectReference Include="..\MyShop.Queries\MyShop.Queries.csproj" />
   </ItemGroup>
 
 </Project>
