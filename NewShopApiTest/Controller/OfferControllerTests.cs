@@ -110,7 +110,7 @@ namespace MyShopApiTest.Controller
         }
 
         [Test]
-        public async Task CreateProduct_Success()
+        public async Task CreateProduct_InsertProductWithSuccess()
         {
             //Arrange
             var product = mockProducts.First();
@@ -137,12 +137,10 @@ namespace MyShopApiTest.Controller
             Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
         }
 
-
         [Test]
-        public async Task CreateProduct_Fails()
+        public async Task CreateProduct_FailsInsertingOnException()
         {
             //Arrange
-            var product = mockProducts.First();
             var command = new AddProductCommand { };
 
             _mockMediator.Setup(s => s.Send(It.IsAny<AddProductCommand>(), default))
@@ -150,6 +148,58 @@ namespace MyShopApiTest.Controller
 
             //Act
             var result = await _controller.CreateProduct(command);
+
+            //Asserts
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ObjectResult>(result);
+
+            var error = result as ObjectResult;
+            Assert.IsNotNull(error);
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, error.StatusCode);
+        }
+
+        [Test]
+        public async Task UpdateProduct_UpdateWithSuccess()
+        {
+            //Arrange
+            var product = mockProducts.First();
+            var command = new UpdateProductCommand
+            {
+                Id = product.Id,
+                Brand = product.Brand,
+                Name = product.Name,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                Size = product.Size
+            };
+
+            _mockMediator.Setup(s => s.Send(It.IsAny<UpdateProductCommand>(), default))
+                .ReturnsAsync(Unit.Value);
+
+            //Act
+            var result = await _controller.UpdateProduct(command);
+
+            //Asserts
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ObjectResult>(result);
+
+            var response = result as OkObjectResult;
+            Assert.IsNotNull(response);
+            Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
+        }
+
+
+        [Test]
+        public async Task CreateProduct_FailsUpdateOnException()
+        {
+            //Arrange
+            var command = new UpdateProductCommand { };
+
+            _mockMediator.Setup(s => s.Send(It.IsAny<UpdateProductCommand>(), default))
+                .ThrowsAsync(new Exception("Update exception."));
+
+            //Act
+            var result = await _controller.UpdateProduct(command);
 
             //Asserts
             Assert.IsNotNull(result);

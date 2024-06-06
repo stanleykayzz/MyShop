@@ -96,13 +96,13 @@ namespace MyShop.Api.Controller
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put([FromBody] UpdateProductCommand command)
+        public async Task<ActionResult> UpdateProduct([FromBody] UpdateProductCommand command)
         {
             try
             {
                 await _mediator.Send(command);
 
-                return NoContent();
+                return Ok(new { Updated = "Product updated" });
             }
             catch (Exception e)
             {
