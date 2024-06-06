@@ -52,9 +52,25 @@ namespace MyShop.Infrastructure.Repositories
                 .FirstAsync(p => p.Id == id);
         }
 
-        public Task UpdateAsynct(Core.Entities.Product entity)
+        public async Task UpdateAsync(Core.Entities.Product entity)
         {
-            throw new NotImplementedException();
+            var existingProduct = await _dbContext.Products
+                    .Include(p => p.Price)
+                    .Include(p => p.Stock)
+                    .FirstOrDefaultAsync(p => p.ProductId == entity.Id); 
+            
+            if (existingProduct == null)
+            {
+                throw new ArgumentException("Product not found");
+            }
+
+            existingProduct.ProductName = entity.Name;
+            existingProduct.ProductBrand = entity.Brand;
+            existingProduct.ProductSize = entity.Size;
+            existingProduct.Price.Amount = entity.Price;
+            existingProduct.Stock.Quantity = entity.Quantity;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

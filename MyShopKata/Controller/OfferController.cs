@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MyShop.Command;
 using MyShop.Core.Entities;
 using MyShop.Queries;
 
@@ -22,6 +23,8 @@ namespace MyShop.Api.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
             try
@@ -33,7 +36,7 @@ namespace MyShop.Api.Controller
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ErrorMessage = e.Message });
             }
         }
 
@@ -44,7 +47,9 @@ namespace MyShop.Api.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Product>> GetProductById(int id)
         {
             try
             {
@@ -56,26 +61,53 @@ namespace MyShop.Api.Controller
             }
             catch (Exception e)
             {
-                return NotFound(e);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ErrorMessage = e.Message });
             }
         }
 
-        // POST api/offer
+        /// <summary>
+        /// POST api/offer
+        /// Create a new product
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> CreateProduct([FromBody] AddProductCommand command)
         {
+            try
+            {
+                var id = await _mediator.Send(command);
+                return Ok(new { Created = "New product created" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ErrorMessage = e.Message });
+            }
         }
 
-        // PUT api/offer/5
+        /// <summary>
+        /// PUT api/offer/
+        /// Update Product from body
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Put([FromBody] UpdateProductCommand command)
         {
-        }
+            try
+            {
+                await _mediator.Send(command);
 
-        // DELETE api/offer/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ErrorMessage = e.Message });
+            }
         }
     }
 }
