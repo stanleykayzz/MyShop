@@ -1,5 +1,3 @@
-1
-
 API "MyShop"
 
 L'api doit nous permettre de gérer des offres qui doivent avoir les données suivantes :
@@ -19,6 +17,7 @@ routes :
 /api/offer/update -> Modifie une offre existante
 
 Data
+
 Le stockage des données doit être découpé de la façon suivante:
 dbo.product : doit contenir un identifiant, un nom, une marque et une taille.
 dbo.price : doit contenir un prix par produit.
