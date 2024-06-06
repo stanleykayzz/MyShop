@@ -42,7 +42,7 @@ builder.Services.AddMediatR(
     cfg => {
         cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly);
         cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQueryHandler).Assembly);
-        cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(UpdateProductCommandHandler).Assembly);
     });
 
 var app = builder.Build();
