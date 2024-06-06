@@ -21,46 +21,27 @@ public partial class MyShopDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Price>(entity =>
-        {
-            entity.HasKey(e => e.ProductId).HasName("PK__price__B40CC6CDAFEC334F");
+        modelBuilder.Entity<Product>().ToTable("product");
+        modelBuilder.Entity<Price>().ToTable("price");
+        modelBuilder.Entity<Stock>().ToTable("stock");
+        modelBuilder.Entity<Product>()
+            .HasKey(p => p.ProductId);
 
-            entity.ToTable("price");
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Price)
+            .WithOne(pr => pr.Product)
+            .HasForeignKey<Price>(pr => pr.ProductId);
 
-            entity.Property(e => e.ProductId).ValueGeneratedNever();
-            entity.Property(e => e.Price1)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("Price");
-        });
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Stock)
+            .WithOne(s => s.Product)
+            .HasForeignKey<Stock>(s => s.ProductId);
 
-        modelBuilder.Entity<Product>(entity =>
-        {
-            entity.HasKey(e => e.ProductId).HasName("PK__product__B40CC6CDE1714549");
+        modelBuilder.Entity<Price>()
+            .HasKey(pr => pr.PriceId);
 
-            entity.ToTable("product");
-
-            entity.Property(e => e.ProductId).ValueGeneratedNever();
-            entity.Property(e => e.ProductBrand)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.ProductName)
-                .IsRequired()
-                .HasMaxLength(100);
-            entity.Property(e => e.ProductSize)
-                .IsRequired()
-                .HasMaxLength(2)
-                .IsUnicode(false)
-                .IsFixedLength();
-        });
-
-        modelBuilder.Entity<Stock>(entity =>
-        {
-            entity.HasKey(e => e.ProductId).HasName("PK__stock__B40CC6CDE758BA1D");
-
-            entity.ToTable("stock");
-
-            entity.Property(e => e.ProductId).ValueGeneratedNever();
-        });
+        modelBuilder.Entity<Stock>()
+            .HasKey(s => s.StockId);
 
         OnModelCreatingPartial(modelBuilder);
     }

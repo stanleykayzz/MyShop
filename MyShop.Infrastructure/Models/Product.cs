@@ -14,4 +14,8 @@ public partial class Product
     public string ProductBrand { get; set; }
 
     public string ProductSize { get; set; }
+
+    public virtual Price Price { get; set; }
+
+    public virtual Stock Stock { get; set; }
 }
