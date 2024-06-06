@@ -1,12 +1,8 @@
 using MyShop.Command.Handler;
-using MyShop.Core.Entities;
 using MyShop.Core.Interface;
 using MyShop.Infrastructure.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using MyShop.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Options;
 using MyShop.Queries.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +14,11 @@ var configuration = builder.Configuration.GetSection($"Environments:{environment
 //Is inMemoryDatabase enable
 var useInMemoryDatabase = configuration.GetValue<bool>("DatabaseSettings:UseInMemoryDatabase");
 
-builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve);
 builder.Services.AddEndpointsApiExplorer();
+    
 builder.Services.AddSwaggerGen();
 
 if (useInMemoryDatabase)
@@ -43,6 +42,7 @@ builder.Services.AddMediatR(
     cfg => {
         cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly);
         cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQueryHandler).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly);
     });
 
 var app = builder.Build();
