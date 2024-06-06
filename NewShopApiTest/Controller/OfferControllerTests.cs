@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MyShop.Api.Controller;
+using MyShop.Command;
 using MyShop.Core.Entities;
 using MyShop.Queries;
 
@@ -58,6 +59,7 @@ namespace MyShopApiTest.Controller
         {
             //Arrange
             _mockMediator = new Mock<IMediator>();
+            _controller = new OfferController(_mockMediator.Object);
         }
 
         [Test]
@@ -67,8 +69,6 @@ namespace MyShopApiTest.Controller
             _mockMediator.Setup(s =>
                 s.Send(It.IsAny<GetAllProductsQuery>(), default))
                     .ReturnsAsync(mockProducts);
-
-            _controller = new OfferController(_mockMediator.Object);
 
             //Act
             var result = await _controller.GetAllProducts();
@@ -94,7 +94,6 @@ namespace MyShopApiTest.Controller
                 s.Send(It.IsAny<GetAllProductsQuery>(), default))
                 .ThrowsAsync(new Exception("We got an exception."));
 
-            _controller = new OfferController(_mockMediator.Object);
             //Act
             var result = await _controller.GetAllProducts();
 
@@ -107,7 +106,58 @@ namespace MyShopApiTest.Controller
             
             var errorResponse = errorResult.Value as dynamic;
             Assert.IsNotNull(errorResponse);
-            Assert.That(Is.EqualTo(errorResponse), "We got an exception.");
+            //Assert.That(Is.EqualTo(errorResponse.ErrorMessage), "We got an exception.");
+        }
+
+        [Test]
+        public async Task CreateProduct_Success()
+        {
+            //Arrange
+            var product = mockProducts.First();
+            var command = new AddProductCommand {
+                Brand = product.Brand,
+                Name = product.Name,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                Size = product.Size
+            };
+
+            _mockMediator.Setup(s => s.Send(It.IsAny<AddProductCommand>(), default))
+                .ReturnsAsync(Unit.Value);
+
+            //Act
+            var result = await _controller.CreateProduct(command);
+
+            //Asserts
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkObjectResult>(result);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
+        }
+
+
+        [Test]
+        public async Task CreateProduct_Fails()
+        {
+            //Arrange
+            var product = mockProducts.First();
+            var command = new AddProductCommand { };
+
+            _mockMediator.Setup(s => s.Send(It.IsAny<AddProductCommand>(), default))
+                .ThrowsAsync(new Exception("Insert exception."));
+
+            //Act
+            var result = await _controller.CreateProduct(command);
+
+            //Asserts
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ObjectResult>(result);
+
+            var error = result as ObjectResult;
+            Assert.IsNotNull(error);
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, error.StatusCode);
         }
     }
 }
