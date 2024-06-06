@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MyShop.Api.Controller;
@@ -57,17 +58,18 @@ namespace MyShopApiTest.Controller
         {
             //Arrange
             _mockMediator = new Mock<IMediator>();
-
-            _mockMediator.Setup(s =>
-                s.Send(It.IsAny<GetAllProductsQuery>(), default))
-                    .ReturnsAsync(mockProducts);
-
-            _controller = new OfferController(_mockMediator.Object);
         }
 
         [Test]
         public async Task GetAllProducts_ReturnListProducts()
         {
+            //Arrange
+            _mockMediator.Setup(s =>
+                s.Send(It.IsAny<GetAllProductsQuery>(), default))
+                    .ReturnsAsync(mockProducts);
+
+            _controller = new OfferController(_mockMediator.Object);
+
             //Act
             var result = await _controller.GetAllProducts();
 
@@ -82,6 +84,30 @@ namespace MyShopApiTest.Controller
             Assert.IsNotNull(returnedProducts);
             Assert.That(returnedProducts.Count, Is.EqualTo(mockProducts.Count()));
             Assert.That(returnedProducts, Is.EqualTo(mockProducts));
+        }
+
+        [Test]
+        public async Task GetAllProducts_ReturnInternalErrorOnException()
+        {
+            //Arrange
+            _mockMediator.Setup(s =>
+                s.Send(It.IsAny<GetAllProductsQuery>(), default))
+                .ThrowsAsync(new Exception("We got an exception."));
+
+            _controller = new OfferController(_mockMediator.Object);
+            //Act
+            var result = await _controller.GetAllProducts();
+
+            //Asserts
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ActionResult<IEnumerable<Product>>>(result);
+
+            var errorResult = result.Result as ObjectResult;
+            Assert.That(errorResult.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+            
+            var errorResponse = errorResult.Value as dynamic;
+            Assert.IsNotNull(errorResponse);
+            Assert.That(Is.EqualTo(errorResponse), "We got an exception.");
         }
     }
 }
