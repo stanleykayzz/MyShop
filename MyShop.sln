@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShop.Api", "MyShopKata\MyShop.Api.csproj", "{7BE38071-A077-4D72-8B4C-229CC1E7CA18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyShop.Api", "MyShopKata\MyShop.Api.csproj", "{7BE38071-A077-4D72-8B4C-229CC1E7CA18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShop.Core", "MyShop.Core\MyShop.Core.csproj", "{DBE6AE73-49BD-4112-9B8C-D5AF3A8577F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyShop.Core", "MyShop.Core\MyShop.Core.csproj", "{DBE6AE73-49BD-4112-9B8C-D5AF3A8577F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShop.Command", "MyShop.Command\MyShop.Command.csproj", "{A03E3C15-09A1-4DE5-97F0-E2C9FC8BA02F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyShop.Command", "MyShop.Command\MyShop.Command.csproj", "{A03E3C15-09A1-4DE5-97F0-E2C9FC8BA02F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShop.Queries", "MyShop.Queries\MyShop.Queries.csproj", "{AB240461-45A3-4B1B-AE24-2D549F8505E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyShop.Queries", "MyShop.Queries\MyShop.Queries.csproj", "{AB240461-45A3-4B1B-AE24-2D549F8505E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShop.Infrastructure", "MyShop.Infrastructure\MyShop.Infrastructure.csproj", "{197D0D39-891D-4A71-8244-73AE078AE664}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyShop.Infrastructure", "MyShop.Infrastructure\MyShop.Infrastructure.csproj", "{197D0D39-891D-4A71-8244-73AE078AE664}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShopApiTest", "NewShopApiTest\MyShopApiTest.csproj", "{0E090AC0-DF2E-49C7-9FAB-6737662CB195}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{197D0D39-891D-4A71-8244-73AE078AE664}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{197D0D39-891D-4A71-8244-73AE078AE664}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{197D0D39-891D-4A71-8244-73AE078AE664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E090AC0-DF2E-49C7-9FAB-6737662CB195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E090AC0-DF2E-49C7-9FAB-6737662CB195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E090AC0-DF2E-49C7-9FAB-6737662CB195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E090AC0-DF2E-49C7-9FAB-6737662CB195}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
