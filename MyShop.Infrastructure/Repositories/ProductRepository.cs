@@ -36,9 +36,17 @@ namespace MyShop.Infrastructure.Repositories
                 }).ToListAsync();
         }
 
-        public Task<Core.Entities.Product> GetByIdAsync(int id)
+        public async Task<Core.Entities.Product> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Products
+                .Select(x => new Core.Entities.Product
+                {
+                    Id = x.ProductId,
+                    Brand = x.ProductBrand,
+                    Name = x.ProductName,
+                    Size = x.ProductSize
+                })
+                .FirstAsync(p => p.Id == id);
         }
 
         public Task UpdateAsynct(Core.Entities.Product entity)

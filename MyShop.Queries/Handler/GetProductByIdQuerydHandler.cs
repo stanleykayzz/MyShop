@@ -11,9 +11,6 @@ namespace MyShop.Queries.Handler
         {
             _repository = repository;
         }
-        public async Task<Product> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
-        {
-            return await _repository.GetByIdAsync(request.Id);
-        }
+        public async Task<Product> Handle(GetProductByIdQuery request, CancellationToken cancellationToken) => await _repository.GetByIdAsync(request.Id);
     }
 }

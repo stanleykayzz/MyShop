@@ -37,11 +37,27 @@ namespace MyShop.Api.Controller
             }
         }
 
-        // GET api/offer/5
+        /// <summary>
+        /// GET api/offer/5
+        /// return existing product matching id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Product>> Get(int id)
         {
-            return "value";
+            try
+            {
+                var query = new GetProductByIdQuery(id);
+                var result = await _mediator.Send(query);
+
+                return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                return NotFound(e);
+            }
         }
 
         // POST api/offer
