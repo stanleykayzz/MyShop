@@ -18,8 +18,11 @@ namespace MyShop.Infrastructure.Repositories
             {
                 ProductBrand = entity.Brand,
                 ProductName = entity.Name,
-                ProductSize = entity.Size
+                ProductSize = entity.Size,
+                Price = new Price { Amount = entity.Price },
+                Stock = new Stock { Quantity = entity.Quantity }
             };
+
             await _dbContext.Products.AddAsync(product);
             await _dbContext.SaveChangesAsync();
         }

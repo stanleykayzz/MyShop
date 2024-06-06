@@ -20,7 +20,8 @@ namespace MyShop.Command.Handler
                 Name = request.Name,
                 Price = request.Price,
                 Quantity = request.Quantity,
-                Size = request.Size
+                Size = request.Size,
+                Brand = request.Brand
             });
 
             return Unit.Value;
