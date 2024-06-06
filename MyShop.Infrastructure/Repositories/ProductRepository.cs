@@ -67,7 +67,9 @@ namespace MyShop.Infrastructure.Repositories
             existingProduct.ProductName = entity.Name;
             existingProduct.ProductBrand = entity.Brand;
             existingProduct.ProductSize = entity.Size;
+
             existingProduct.Price.Amount = entity.Price;
+
             existingProduct.Stock.Quantity = entity.Quantity;
 
             await _dbContext.SaveChangesAsync();

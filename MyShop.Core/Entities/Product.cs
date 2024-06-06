@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyShop.Core.Entities
+﻿namespace MyShop.Core.Entities
 {
     public class Product
     {
