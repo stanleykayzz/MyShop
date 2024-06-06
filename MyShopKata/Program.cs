@@ -7,12 +7,13 @@ using MyShop.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
+using MyShop.Queries.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the app
 var environment = builder.Environment.EnvironmentName;
-var configuration = builder.Configuration.GetSection("Environnments").GetSection(environment);
+var configuration = builder.Configuration.GetSection($"Environments:{environment}");
 
 //Is inMemoryDatabase enable
 var useInMemoryDatabase = configuration.GetValue<bool>("DatabaseSettings:UseInMemoryDatabase");
@@ -29,16 +30,32 @@ if (useInMemoryDatabase)
 }
 else
 {
+    var connectionString = configuration.GetSection("DatabaseSettings:ConnectionString").Value;
+
     builder.Services.AddDbContext<MyShopDbContext>(options =>
-        options.UseSqlServer(
-            configuration.GetValue<string>("DatabaseSettings:ConnectionString")
-        ));
+        options.UseSqlServer(connectionString));
+
 }
 
 builder.Services.AddScoped<IRepository<MyShop.Core.Entities.Product>, ProductRepository>();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly));
+
+builder.Services.AddMediatR(
+    cfg => {
+        cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQueryHandler).Assembly);
+    });
 
 var app = builder.Build();
+
+// Initialise the database
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<MyShopDbContext>();
+    if (useInMemoryDatabase)
+    {
+        dbContext.Database.EnsureCreated(); 
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -52,8 +69,6 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
-
-//app.MapGet("/", () => "Hello World!");
 
 app.UseHttpsRedirection();
 
